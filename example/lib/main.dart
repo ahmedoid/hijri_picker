@@ -1,9 +1,8 @@
 import 'dart:async';
 
-import 'package:example/picker/_hDatePickerDialog.dart';
+import 'package:example/picker/hijri_date_picker.dart';
 import 'package:example/picker/hijri/umm_alqura_calendar.dart';
 import 'package:flutter/material.dart';
-import 'package:hijri_picker/hijri_picker.dart';
 
 void main() => runApp(new MyApp());
 
@@ -63,7 +62,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void _incrementCounter() {
     setState(() {
       _counter++;
-      i = Calculator().addOne(i);
     });
   }
 

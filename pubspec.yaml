@@ -7,6 +7,7 @@ homepage:
 dependencies:
   flutter:
     sdk: flutter
+  hijri: "^0.0.13"
 
 dev_dependencies:
   flutter_test:

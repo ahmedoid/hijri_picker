@@ -1,13 +1,11 @@
-library hijri_picker;
-
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:example/picker/hijri/umm_alqura_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
-import 'package:hijri/umm_alqura_calendar.dart';
 
 const double _kMonthPickerPortraitWidth = 330.0;
 const double _kMonthPickerLandscapeWidth = 344.0;
