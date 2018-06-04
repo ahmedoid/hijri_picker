@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:example/picker/hijri_date_picker.dart';
-import 'package:example/picker/hijri/umm_alqura_calendar.dart';
 import 'package:flutter/material.dart';
+import 'package:hijri/umm_alqura_calendar.dart';
+import 'package:hijri_picker/hijri_picker.dart';
 
 void main() => runApp(new MyApp());
 
@@ -12,42 +12,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
         title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
         theme: new ThemeData(
-            // This is the theme of your application.
-            //
-            // Try running your application with "flutter run". You'll see the
-            // application has a blue toolbar. Then, without quitting the app, try
-            // changing the primarySwatch below to Colors.green and then invoke
-            // "hot reload" (press "r" in the console where you ran "flutter run",
-            // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
-            // counter didn't reset back to zero; the application is not restarted.
-            primarySwatch: Colors.purple,
-            accentColor: Colors.amber),
-        home:
-            MyHomePage() /* new DatePickerDialog(
-        initialDate: new ummAlquraCalendar.now(),
-        lastDate: new ummAlquraCalendar.now()
-          ..hYear = 1450
-          ..hMonth = 12
-          ..hDay = 20,
-        firstDate: new ummAlquraCalendar.now(),
-        initialDatePickerMode: DatePickerMode.day,
-      ),*/
-        );
+          primaryColor: Colors.lightBlue,
+          accentColor: Colors.pinkAccent,
+          brightness: Brightness.light,
+        ),
+        home: MyHomePage(title: "umm Alqura Date Picker"));
   }
 }
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -56,76 +32,64 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  int i = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  ummAlquraCalendar selectedDate = new ummAlquraCalendar.now();
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("hh"),
+        title: new Text(widget.title),
       ),
-      body: new Center(
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new RawMaterialButton(onPressed: () {
-              _selectDatea(context);
-            }),
-            new Text(
-              'You have pushed the button this many times:',
-            ),
-            new Text(
-              '$i',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
+      body: new Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: new Center(
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              new Text(
+                'Hijri Date',
+                style: Theme.of(context).textTheme.display2,
+              ),
+              Divider(),
+              new Text(
+                '${selectedDate.toString()}',
+                style: Theme.of(context).textTheme.headline,
+              ),
+              new Text(
+                '${selectedDate.fullDate()}',
+                style: Theme.of(context).textTheme.headline,
+              ),
+              new Text(
+                '${selectedDate.toFormat("MMMM dd yyyy")}',
+                style: Theme.of(context).textTheme.headline,
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: new FloatingActionButton(
         onPressed: () => _selectDate(context),
-        tooltip: 'Increment',
-        child: new Icon(Icons.add),
-      ), // T// his trailing comma makes auto-formatting nicer for build methods.
+        tooltip: 'Pick Date',
+        child: new Icon(Icons.event),
+      ),
     );
   }
 
-  //final ummAlquraCalendar selectedDate;
-
   Future<Null> _selectDate(BuildContext context) async {
-    final ummAlquraCalendar picked = await hijriShowDatePicker(
+    final ummAlquraCalendar picked = await showHijriDatePicker(
       context: context,
-      initialDate: new ummAlquraCalendar()
-        ..hYear = 1439
-        ..hMonth = 12
-        ..hDay = 25,
+      initialDate: selectedDate,
       lastDate: new ummAlquraCalendar()
         ..hYear = 1442
         ..hMonth = 9
         ..hDay = 25,
       firstDate: new ummAlquraCalendar()
-        ..hYear = 1439
+        ..hYear = 1438
         ..hMonth = 12
         ..hDay = 25,
       initialDatePickerMode: DatePickerMode.day,
     );
-    if (picked != null) print(picked);
-  }
-
-  Future<Null> _selectDatea(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: new DateTime(2018),
-      firstDate: new DateTime(2015, 8),
-      lastDate: new DateTime(2101),
-      initialDatePickerMode: DatePickerMode.day,
-    );
-    if (picked != null) print(picked);
+    if (picked != null) selectedDate = picked;
   }
 }

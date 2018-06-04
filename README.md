@@ -1,9 +1,9 @@
-# hijri_picker
 
-A new Flutter project.
+Hijri Date Picker
+-
+![alt text](https://i.imgur.com/yG93uZ2.png)
 
 ## Getting Started
 
-For help getting started with Flutter, view our online [documentation](https://flutter.io/).
+For help getting started  [documentation](https://pub.dartlang.org/packages/hijri_picker#-example-tab-).
 
-For help on editing package code, view the [documentation](https://flutter.io/developing-packages/).

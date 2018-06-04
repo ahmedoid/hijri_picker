@@ -1,17 +1,15 @@
 name: hijri_picker
-description: A new Flutter project.
-version: 0.0.1
-author: Ahmed Aljoaid
-homepage:
+description: Hijri Date Picker.
+version: 0.0.2
+author: Ahmed Aljoaid <aljo3aid@gmail.com>
+homepage: "http://www.ummulqura.org.sa/"
 
 dependencies:
   flutter:
     sdk: flutter
   hijri: "^0.0.13"
 
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
@@ -49,3 +47,8 @@ flutter:
   #
   # For details regarding fonts in packages, see
   # https://flutter.io/custom-fonts/#from-packages
+environment:
+  sdk: ">=2.0.0-dev.28.0 <3.0.0"
+dev_dependencies:
+  flutter_driver:
+    sdk: flutter

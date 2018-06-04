@@ -28,8 +28,8 @@ const Duration _kMonthScrollDuration = const Duration(milliseconds: 200);
 /// See [showDatePicker].
 typedef bool SelectableDayPredicate(ummAlquraCalendar day);
 
-class DatePickerDialog extends StatefulWidget {
-  const DatePickerDialog({
+class HijriDatePickerDialog extends StatefulWidget {
+  const HijriDatePickerDialog({
     Key key,
     this.initialDate,
     this.firstDate,
@@ -48,7 +48,7 @@ class DatePickerDialog extends StatefulWidget {
   _DatePickerDialogState createState() => new _DatePickerDialogState();
 }
 
-class _DatePickerDialogState extends State<DatePickerDialog> {
+class _DatePickerDialogState extends State<HijriDatePickerDialog> {
   @override
   void initState() {
     super.initState();
@@ -979,7 +979,7 @@ class _hYearPickerState extends State<hYearPicker> {
   }
 }
 
-Future<ummAlquraCalendar> hijriShowDatePicker({
+Future<ummAlquraCalendar> showHijriDatePicker({
   @required BuildContext context,
   @required ummAlquraCalendar initialDate,
   @required ummAlquraCalendar firstDate,
@@ -1001,7 +1001,7 @@ Future<ummAlquraCalendar> hijriShowDatePicker({
   assert(
       initialDatePickerMode != null, 'initialDatePickerMode must not be null');
 
-  Widget child = new DatePickerDialog(
+  Widget child = new HijriDatePickerDialog(
     initialDate: initialDate,
     firstDate: firstDate,
     lastDate: lastDate,
