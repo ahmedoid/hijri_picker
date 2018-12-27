@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: new ThemeData(
-          primaryColor: Colors.lightBlue,
+          primaryColor: Colors.indigo,
           accentColor: Colors.pinkAccent,
           brightness: Brightness.light,
         ),
@@ -33,9 +33,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   ummAlquraCalendar selectedDate = new ummAlquraCalendar.now();
-
   @override
   Widget build(BuildContext context) {
+    print(selectedDate.fullDate());
+
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(widget.title),
@@ -61,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 style: Theme.of(context).textTheme.headline,
               ),
               new Text(
-                '${selectedDate.toFormat("MMMM dd yyyy")}',
+                '${selectedDate.toString()}',
                 style: Theme.of(context).textTheme.headline,
               ),
             ],
@@ -90,6 +91,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ..hDay = 25,
       initialDatePickerMode: DatePickerMode.day,
     );
-    if (picked != null) selectedDate = picked;
+    print(picked);
+    if (picked != null) setState(() {
+      selectedDate = picked;
+    });
   }
 }

@@ -1,9 +1,36 @@
 
 Hijri Date Picker
 -
-![alt text](https://i.imgur.com/yG93uZ2.png)
+Hijri calender to pick umm alqura dates support max & min dates
 
-## Getting Started
 
-For help getting started  [documentation](https://pub.dartlang.org/packages/hijri_picker#-example-tab-).
+Simple Usage
+-
+```dart in html
+ final ummAlquraCalendar picked = await showHijriDatePicker(
+       context: context,
+       initialDate: selectedDate,
+       lastDate: new ummAlquraCalendar()
+         ..hYear = 1442
+         ..hMonth = 9
+         ..hDay = 25,
+       firstDate: new ummAlquraCalendar()
+         ..hYear = 1438
+         ..hMonth = 12
+         ..hDay = 25,
+       initialDatePickerMode: DatePickerMode.day,
+     );
+```
+About
+-
 
+screenshots
+-
+<p float="center">
+  <img src="https://i.imgur.com/tSlypEG.png" width="300" />
+  <img src="https://i.imgur.com/GIE51uo.png" width="300" /> 
+</p>
+
+by
+-
+Ahmed Aljoaid 👨🏻‍💻

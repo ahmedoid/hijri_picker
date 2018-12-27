@@ -129,7 +129,7 @@ class _DatePickerDialogState extends State<HijriDatePickerDialog> {
     assert(_mode != null);
     switch (_mode) {
       case DatePickerMode.day:
-        return new hMonthPicker(
+        return new HijriMonthPicker(
           key: _pickerKey,
           selectedDate: _selectedDate,
           onChanged: _handleDayChanged,
@@ -138,7 +138,7 @@ class _DatePickerDialogState extends State<HijriDatePickerDialog> {
           selectableDayPredicate: widget.selectableDayPredicate,
         );
       case DatePickerMode.year:
-        return new hYearPicker(
+        return new HijriYearPicker(
           key: _pickerKey,
           selectedDate: _selectedDate,
           onChanged: _handleYearChanged,
@@ -263,8 +263,7 @@ class _DatePickerHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final MaterialLocalizations localizations =
-        MaterialLocalizations.of(context);
+   
     final ThemeData themeData = Theme.of(context);
     final TextTheme headerTextTheme = themeData.primaryTextTheme;
     Color dayColor;
@@ -388,12 +387,12 @@ class _DateHeaderButton extends StatelessWidget {
   }
 }
 
-class hMonthPicker extends StatefulWidget {
+class HijriMonthPicker extends StatefulWidget {
   /// Creates a month picker.
   ///
   /// Rarely used directly. Instead, typically used as part of the dialog shown
   /// by [showDatePicker].
-  hMonthPicker({
+  HijriMonthPicker({
     Key key,
     @required this.selectedDate,
     @required this.onChanged,
@@ -428,10 +427,10 @@ class hMonthPicker extends StatefulWidget {
   final SelectableDayPredicate selectableDayPredicate;
 
   @override
-  _hMonthPickerState createState() => new _hMonthPickerState();
+  _HijriMonthPickerState createState() => new _HijriMonthPickerState();
 }
 
-class _hMonthPickerState extends State<hMonthPicker> {
+class _HijriMonthPickerState extends State<HijriMonthPicker> {
   @override
   void initState() {
     super.initState();
@@ -443,7 +442,7 @@ class _hMonthPickerState extends State<hMonthPicker> {
   }
 
   @override
-  void didUpdateWidget(hMonthPicker oldWidget) {
+  void didUpdateWidget(HijriMonthPicker oldWidget) {
     super.didUpdateWidget(oldWidget);
     print("dates is equal : ${widget.selectedDate != oldWidget.selectedDate}");
     if (!widget.selectedDate.isAtSameMomentAs(oldWidget.selectedDate.hYear,
@@ -509,7 +508,7 @@ class _hMonthPickerState extends State<hMonthPicker> {
 
   Widget _buildItems(BuildContext context, int index) {
     final month = _addMonthsToMonthDate(widget.firstDate, index);
-    return new hDayPicker(
+    return new HijriDayPicker(
       key: new ValueKey<ummAlquraCalendar>(month),
       selectedDate: widget.selectedDate,
       currentDate: _todayDate,
@@ -656,8 +655,8 @@ const int daysPerWeek = 7;
 ///
 ///
 
-class _hDayPickerGridDelegate extends SliverGridDelegate {
-  const _hDayPickerGridDelegate();
+class _HijriDayPickerGridDelegate extends SliverGridDelegate {
+  const _HijriDayPickerGridDelegate();
 
   @override
   SliverGridLayout getLayout(SliverConstraints constraints) {
@@ -676,17 +675,17 @@ class _hDayPickerGridDelegate extends SliverGridDelegate {
   }
 
   @override
-  bool shouldRelayout(_hDayPickerGridDelegate oldDelegate) => false;
+  bool shouldRelayout(_HijriDayPickerGridDelegate oldDelegate) => false;
 }
 
-const _hDayPickerGridDelegate _kDayPickerGridDelegate =
-    const _hDayPickerGridDelegate();
+const _HijriDayPickerGridDelegate _kDayPickerGridDelegate =
+    const _HijriDayPickerGridDelegate();
 
-class hDayPicker extends StatelessWidget {
+class HijriDayPicker extends StatelessWidget {
   /// Creates a day picker.
   ///
   /// Rarely used directly. Instead, typically used as part of a [MonthPicker].
-  hDayPicker({
+  HijriDayPicker({
     Key key,
     @required this.selectedDate,
     @required this.currentDate,
@@ -890,7 +889,7 @@ class hDayPicker extends StatelessWidget {
 ///
 ///  * [showDatePicker]
 ///  * <https://material.google.com/components/pickers.html#pickers-date-pickers>
-class hYearPicker extends StatefulWidget {
+class HijriYearPicker extends StatefulWidget {
   /// Creates a year picker.
   ///
   /// The [selectedDate] and [onChanged] arguments must not be null. The
@@ -898,7 +897,7 @@ class hYearPicker extends StatefulWidget {
   ///
   /// Rarely used directly. Instead, typically used as part of the dialog shown
   /// by [showDatePicker].
-  hYearPicker({
+  HijriYearPicker({
     Key key,
     @required this.selectedDate,
     @required this.onChanged,
@@ -925,10 +924,10 @@ class hYearPicker extends StatefulWidget {
   final ummAlquraCalendar lastDate;
 
   @override
-  _hYearPickerState createState() => new _hYearPickerState();
+  _HijriYearPickerState createState() => new _HijriYearPickerState();
 }
 
-class _hYearPickerState extends State<hYearPicker> {
+class _HijriYearPickerState extends State<HijriYearPicker> {
   static const double _itemExtent = 50.0;
   ScrollController scrollController;
 
