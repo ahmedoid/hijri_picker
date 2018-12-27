@@ -1,8 +1,8 @@
 name: hijri_picker
 description: Hijri calender to pick umm alqura dates support max & min dates.
-version: 0.0.34
+version: 0.0.35
 author: Ahmed Aljoaid <aljo3aid@gmail.com>
-homepage: "http://www.ummulqura.org.sa/"
+homepage: "https://github.com/ahmedoid/hijri_picker"
 
 dependencies:
   flutter:
