@@ -10,7 +10,8 @@ dependencies:
   cupertino_icons: ^0.1.2
   hijri_picker:
     path : ../
-
+  flutter_localizations:
+    sdk: flutter
 dev_dependencies:
   flutter_test:
     sdk: flutter

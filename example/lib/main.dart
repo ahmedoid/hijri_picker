@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hijri/umm_alqura_calendar.dart';
 import 'package:hijri_picker/hijri_picker.dart';
 
@@ -12,13 +13,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
         title: 'Flutter Demo',
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: [
+          //     const Locale('en', 'USA'),
+          const Locale('ar', 'SA'),
+        ],
         debugShowCheckedModeBanner: false,
         theme: new ThemeData(
-          primaryColor: Colors.indigo,
-          accentColor: Colors.pinkAccent,
-          brightness: Brightness.light,
+          primaryColor: Colors.brown,
+          accentColor: Colors.green,
+          brightness: Brightness.dark,
         ),
-        home: MyHomePage(title: "umm Alqura Date Picker"));
+        home: MyHomePage(title: "Umm Alqura Calendar"));
   }
 }
 
@@ -32,11 +41,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  ummAlquraCalendar selectedDate = new ummAlquraCalendar.now();
+  UmmAlquraCalendar selectedDate = new UmmAlquraCalendar.now();
+
   @override
   Widget build(BuildContext context) {
-    print(selectedDate.fullDate());
-
+    UmmAlquraCalendar.setLocal(Localizations.localeOf(context).languageCode);
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(widget.title),
@@ -45,14 +54,9 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: const EdgeInsets.all(8.0),
         child: new Center(
           child: new Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            //   crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              new Text(
-                'Hijri Date',
-                style: Theme.of(context).textTheme.display2,
-              ),
-              Divider(),
               new Text(
                 '${selectedDate.toString()}',
                 style: Theme.of(context).textTheme.headline,
@@ -61,10 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 '${selectedDate.fullDate()}',
                 style: Theme.of(context).textTheme.headline,
               ),
-              new Text(
-                '${selectedDate.toString()}',
-                style: Theme.of(context).textTheme.headline,
-              ),
+
             ],
           ),
         ),
@@ -78,22 +79,24 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<Null> _selectDate(BuildContext context) async {
-    final ummAlquraCalendar picked = await showHijriDatePicker(
+    final UmmAlquraCalendar picked = await showHijriDatePicker(
       context: context,
       initialDate: selectedDate,
-      lastDate: new ummAlquraCalendar()
-        ..hYear = 1442
+
+      lastDate: new UmmAlquraCalendar()
+        ..hYear = 1445
         ..hMonth = 9
         ..hDay = 25,
-      firstDate: new ummAlquraCalendar()
+      firstDate: new UmmAlquraCalendar()
         ..hYear = 1438
         ..hMonth = 12
         ..hDay = 25,
       initialDatePickerMode: DatePickerMode.day,
     );
     print(picked);
-    if (picked != null) setState(() {
-      selectedDate = picked;
-    });
+    if (picked != null)
+      setState(() {
+        selectedDate = picked;
+      });
   }
 }

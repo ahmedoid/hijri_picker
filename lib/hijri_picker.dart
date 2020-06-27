@@ -26,7 +26,7 @@ const Duration _kMonthScrollDuration = const Duration(milliseconds: 200);
 /// Signature for predicating dates for enabled date selections.
 ///
 /// See [showDatePicker].
-typedef bool SelectableDayPredicate(ummAlquraCalendar day);
+typedef bool SelectableDayPredicate(UmmAlquraCalendar day);
 
 class HijriDatePickerDialog extends StatefulWidget {
   const HijriDatePickerDialog({
@@ -38,9 +38,9 @@ class HijriDatePickerDialog extends StatefulWidget {
     this.initialDatePickerMode,
   }) : super(key: key);
 
-  final ummAlquraCalendar initialDate;
-  final ummAlquraCalendar firstDate;
-  final ummAlquraCalendar lastDate;
+  final UmmAlquraCalendar initialDate;
+  final UmmAlquraCalendar firstDate;
+  final UmmAlquraCalendar lastDate;
   final SelectableDayPredicate selectableDayPredicate;
   final DatePickerMode initialDatePickerMode;
 
@@ -75,7 +75,7 @@ class _DatePickerDialogState extends State<HijriDatePickerDialog> {
     }
   }
 
-  ummAlquraCalendar _selectedDate;
+  UmmAlquraCalendar _selectedDate;
   DatePickerMode _mode;
   final GlobalKey _pickerKey = new GlobalKey();
 
@@ -86,6 +86,12 @@ class _DatePickerDialogState extends State<HijriDatePickerDialog> {
         HapticFeedback.vibrate();
         break;
       case TargetPlatform.iOS:
+        break;
+      case TargetPlatform.linux:
+        break;
+      case TargetPlatform.macOS:
+        break;
+      case TargetPlatform.windows:
         break;
     }
   }
@@ -102,7 +108,7 @@ class _DatePickerDialogState extends State<HijriDatePickerDialog> {
     });
   }
 
-  void _handleYearChanged(ummAlquraCalendar value) {
+  void _handleYearChanged(UmmAlquraCalendar value) {
     _vibrate();
     setState(() {
       _mode = DatePickerMode.day;
@@ -110,7 +116,7 @@ class _DatePickerDialogState extends State<HijriDatePickerDialog> {
     });
   }
 
-  void _handleDayChanged(ummAlquraCalendar value) {
+  void _handleDayChanged(UmmAlquraCalendar value) {
     _vibrate();
     setState(() {
       _selectedDate = value;
@@ -152,13 +158,16 @@ class _DatePickerDialogState extends State<HijriDatePickerDialog> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    UmmAlquraCalendar.setLocal(Localizations.localeOf(context).languageCode);
+
     final Widget picker = new Flexible(
       child: new SizedBox(
         height: _kMaxDayPickerHeight,
         child: _buildPicker(),
       ),
     );
-    final Widget actions = new ButtonTheme.bar(
+    final Widget actions = new ButtonBarTheme(
+      data: ButtonBarThemeData(),
       child: new ButtonBar(
         children: <Widget>[
           new FlatButton(
@@ -174,61 +183,61 @@ class _DatePickerDialogState extends State<HijriDatePickerDialog> {
     );
     final Dialog dialog = new Dialog(child: new OrientationBuilder(
         builder: (BuildContext context, Orientation orientation) {
-      assert(orientation != null);
-      final Widget header = new _DatePickerHeader(
-        hSelectedDate: _selectedDate,
-        mode: _mode,
-        onModeChanged: _handleModeChanged,
-        orientation: orientation,
-      );
-      switch (orientation) {
-        case Orientation.portrait:
-          return new SizedBox(
-            width: _kMonthPickerPortraitWidth,
-            child: new Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                header,
-                new Container(
-                  color: theme.dialogBackgroundColor,
-                  child: new Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      picker,
-                      actions,
-                    ],
-                  ),
-                ),
-              ],
-            ),
+          assert(orientation != null);
+          final Widget header = new _DatePickerHeader(
+            hSelectedDate: _selectedDate,
+            mode: _mode,
+            onModeChanged: _handleModeChanged,
+            orientation: orientation,
           );
-        case Orientation.landscape:
-          return new SizedBox(
-            height: _kDatePickerLandscapeHeight,
-            child: new Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                header,
-                new Flexible(
-                  child: new Container(
-                    width: _kMonthPickerLandscapeWidth,
-                    color: theme.dialogBackgroundColor,
-                    child: new Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[picker, actions],
+          switch (orientation) {
+            case Orientation.portrait:
+              return new SizedBox(
+                width: _kMonthPickerPortraitWidth,
+                child: new Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    header,
+                    new Container(
+                      color: theme.dialogBackgroundColor,
+                      child: new Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          picker,
+                          actions,
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          );
-      }
-      return null;
-    }));
+              );
+            case Orientation.landscape:
+              return new SizedBox(
+                height: _kDatePickerLandscapeHeight,
+                child: new Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    header,
+                    new Flexible(
+                      child: new Container(
+                        width: _kMonthPickerLandscapeWidth,
+                        color: theme.dialogBackgroundColor,
+                        child: new Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[picker, actions],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+          }
+          return null;
+        }));
 
     return new Theme(
       data: theme.copyWith(
@@ -252,7 +261,7 @@ class _DatePickerHeader extends StatelessWidget {
         assert(orientation != null),
         super(key: key);
 
-  final ummAlquraCalendar hSelectedDate;
+  final UmmAlquraCalendar hSelectedDate;
   final DatePickerMode mode;
   final ValueChanged<DatePickerMode> onModeChanged;
   final Orientation orientation;
@@ -263,7 +272,7 @@ class _DatePickerHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   
+
     final ThemeData themeData = Theme.of(context);
     final TextTheme headerTextTheme = themeData.primaryTextTheme;
     Color dayColor;
@@ -272,7 +281,7 @@ class _DatePickerHeader extends StatelessWidget {
       case Brightness.light:
         dayColor = mode == DatePickerMode.day ? Colors.black87 : Colors.black54;
         yearColor =
-            mode == DatePickerMode.year ? Colors.black87 : Colors.black54;
+        mode == DatePickerMode.year ? Colors.black87 : Colors.black54;
         break;
       case Brightness.dark:
         dayColor = mode == DatePickerMode.day ? Colors.white : Colors.white70;
@@ -280,9 +289,9 @@ class _DatePickerHeader extends StatelessWidget {
         break;
     }
     final TextStyle dayStyle =
-        headerTextTheme.display1.copyWith(color: dayColor, height: 1.4);
+    headerTextTheme.headline4.copyWith(color: dayColor, height: 1.4);
     final TextStyle yearStyle =
-        headerTextTheme.subhead.copyWith(color: yearColor, height: 1.4);
+    headerTextTheme.subtitle1.copyWith(color: yearColor, height: 1.4);
 
     Color backgroundColor;
     switch (themeData.brightness) {
@@ -317,7 +326,7 @@ class _DatePickerHeader extends StatelessWidget {
       child: new _DateHeaderButton(
         color: backgroundColor,
         onTap: Feedback.wrapForTap(
-            () => _handleChangeMode(DatePickerMode.year), context),
+                () => _handleChangeMode(DatePickerMode.year), context),
         child: new Semantics(
           selected: mode == DatePickerMode.year,
           child: new Text("${hSelectedDate.hYear}", style: yearStyle),
@@ -331,10 +340,10 @@ class _DatePickerHeader extends StatelessWidget {
       child: new _DateHeaderButton(
         color: backgroundColor,
         onTap: Feedback.wrapForTap(
-            () => _handleChangeMode(DatePickerMode.day), context),
+                () => _handleChangeMode(DatePickerMode.day), context),
         child: new Semantics(
           selected: mode == DatePickerMode.day,
-          child: new Text("${hSelectedDate?.toFormat("DD, MM dd")}",
+          child: new Text("${hSelectedDate?.toFormat("DD,dd MM")}",
               style: dayStyle),
         ),
       ),
@@ -402,26 +411,26 @@ class HijriMonthPicker extends StatefulWidget {
   })  : assert(selectedDate != null),
         assert(onChanged != null),
         assert(
-            !firstDate.isAfter(lastDate.hYear, lastDate.hMonth, lastDate.hDay)),
-        assert(selectedDate.isAfter(
+        !firstDate.isAfter(lastDate.hYear, lastDate.hMonth, lastDate.hDay)),
+  /*  assert(selectedDate.isAfter(
                 firstDate.hYear, firstDate.hMonth, firstDate.hDay) ||
             selectedDate.isAtSameMomentAs(
-                firstDate.hYear, firstDate.hMonth, firstDate.hDay)),
+                firstDate.hYear, firstDate.hMonth, firstDate.hDay)),*/
         super(key: key);
 
   /// The currently selected date.
   ///
   /// This date is highlighted in the picker.
-  final ummAlquraCalendar selectedDate;
+  final UmmAlquraCalendar selectedDate;
 
   /// Called when the user picks a month.
-  final ValueChanged<ummAlquraCalendar> onChanged;
+  final ValueChanged<UmmAlquraCalendar> onChanged;
 
   /// The earliest date the user is permitted to pick.
-  final ummAlquraCalendar firstDate;
+  final UmmAlquraCalendar firstDate;
 
   /// The latest date the user is permitted to pick.
-  final ummAlquraCalendar lastDate;
+  final UmmAlquraCalendar lastDate;
 
   /// Optional user supplied predicate function to customize selectable days.
   final SelectableDayPredicate selectableDayPredicate;
@@ -444,7 +453,6 @@ class _HijriMonthPickerState extends State<HijriMonthPicker> {
   @override
   void didUpdateWidget(HijriMonthPicker oldWidget) {
     super.didUpdateWidget(oldWidget);
-    print("dates is equal : ${widget.selectedDate != oldWidget.selectedDate}");
     if (!widget.selectedDate.isAtSameMomentAs(oldWidget.selectedDate.hYear,
         oldWidget.selectedDate.hMonth, oldWidget.selectedDate.hDay)) {
       final int monthPage = _monthDelta(widget.firstDate, widget.selectedDate);
@@ -463,25 +471,25 @@ class _HijriMonthPickerState extends State<HijriMonthPicker> {
     textDirection = Directionality.of(context);
   }
 
-  ummAlquraCalendar _todayDate;
-  ummAlquraCalendar _currentDisplayedMonthDate;
+  UmmAlquraCalendar _todayDate;
+  UmmAlquraCalendar _currentDisplayedMonthDate;
   Timer _timer;
   PageController _dayPickerController;
 
   void _updateCurrentDate() {
-    _todayDate = new ummAlquraCalendar.now();
-    final ummAlquraCalendar tomorrow = new ummAlquraCalendar()
+    _todayDate = new UmmAlquraCalendar.now();
+    final UmmAlquraCalendar tomorrow = new UmmAlquraCalendar()
       ..hYear = _todayDate.hYear
       ..hMonth = _todayDate.hMonth
       ..hDay = _todayDate.hDay + 1;
     Duration timeUntilTomorrow = tomorrow
         .hijriToGregorian(tomorrow.hYear, tomorrow.hMonth, tomorrow.hDay)
         .difference(_todayDate.hijriToGregorian(
-            _todayDate.hYear,
-            _todayDate.hMonth,
-            _todayDate.hDay)); //tomorrow.difference(_todayDate);
+        _todayDate.hYear,
+        _todayDate.hMonth,
+        _todayDate.hDay)); //tomorrow.difference(_todayDate);
     timeUntilTomorrow +=
-        const Duration(seconds: 1); // so we don't miss it by rounding
+    const Duration(seconds: 1); // so we don't miss it by rounding
     _timer?.cancel();
     _timer = new Timer(timeUntilTomorrow, () {
       setState(() {
@@ -491,16 +499,16 @@ class _HijriMonthPickerState extends State<HijriMonthPicker> {
   }
 
   static int _monthDelta(
-      ummAlquraCalendar startDate, ummAlquraCalendar endDate) {
+      UmmAlquraCalendar startDate, UmmAlquraCalendar endDate) {
     return (endDate.hYear - startDate.hYear) * 12 +
         endDate.hMonth -
         startDate.hMonth;
   }
 
   /// Add months to a month truncated date.
-  ummAlquraCalendar _addMonthsToMonthDate(
-      ummAlquraCalendar monthDate, int monthsToAdd) {
-    var x = new ummAlquraCalendar.addMonth(
+  UmmAlquraCalendar _addMonthsToMonthDate(
+      UmmAlquraCalendar monthDate, int monthsToAdd) {
+    var x = new UmmAlquraCalendar.addMonth(
         monthDate.hYear + (monthDate.hMonth + monthsToAdd) ~/ 12,
         monthDate.hMonth + monthsToAdd % 12);
     return x;
@@ -509,7 +517,7 @@ class _HijriMonthPickerState extends State<HijriMonthPicker> {
   Widget _buildItems(BuildContext context, int index) {
     final month = _addMonthsToMonthDate(widget.firstDate, index);
     return new HijriDayPicker(
-      key: new ValueKey<ummAlquraCalendar>(month),
+      key: new ValueKey<UmmAlquraCalendar>(month),
       selectedDate: widget.selectedDate,
       currentDate: _todayDate,
       onChanged: widget.onChanged,
@@ -550,8 +558,8 @@ class _HijriMonthPickerState extends State<HijriMonthPicker> {
         widget.lastDate.hYear, widget.lastDate.hMonth, widget.lastDate.hDay);
   }
 
-  ummAlquraCalendar _previousMonthDate;
-  ummAlquraCalendar _nextMonthDate;
+  UmmAlquraCalendar _previousMonthDate;
+  UmmAlquraCalendar _nextMonthDate;
 
   void _handleMonthPageChanged(int monthPage) {
     setState(() {
@@ -573,7 +581,7 @@ class _HijriMonthPickerState extends State<HijriMonthPicker> {
           new Semantics(
             sortKey: _MonthPickerSortKey.calendar,
             child: new PageView.builder(
-              key: new ValueKey<ummAlquraCalendar>(widget.selectedDate),
+              key: new ValueKey<UmmAlquraCalendar>(widget.selectedDate),
               controller: _dayPickerController,
               scrollDirection: Axis.horizontal,
               itemCount: _monthDelta(widget.firstDate, widget.lastDate) + 1,
@@ -590,11 +598,9 @@ class _HijriMonthPickerState extends State<HijriMonthPicker> {
                 icon: const Icon(Icons.chevron_left),
                 tooltip: _isDisplayingFirstMonth
                     ? null
-                    : '${localizations
-                    .previousMonthTooltip} ${
-                    _previousMonthDate.toString()}',
+                    : '${localizations.previousMonthTooltip} ${_previousMonthDate.toString()}',
                 onPressed:
-                    _isDisplayingFirstMonth ? null : _handlePreviousMonth,
+                _isDisplayingFirstMonth ? null : _handlePreviousMonth,
               ),
             ),
           ),
@@ -607,9 +613,7 @@ class _HijriMonthPickerState extends State<HijriMonthPicker> {
                 icon: const Icon(Icons.chevron_right),
                 tooltip: _isDisplayingLastMonth
                     ? null
-                    : '${localizations
-                    .nextMonthTooltip} ${
-                    _nextMonthDate.toString()}',
+                    : '${localizations.nextMonthTooltip} ${_nextMonthDate.toString()}',
                 onPressed: _isDisplayingLastMonth ? null : _handleNextMonth,
               ),
             ),
@@ -631,7 +635,7 @@ class _HijriMonthPickerState extends State<HijriMonthPicker> {
 // picker.
 class _MonthPickerSortKey extends OrdinalSortKey {
   static const _MonthPickerSortKey previousMonth =
-      const _MonthPickerSortKey(1.0);
+  const _MonthPickerSortKey(1.0);
   static const _MonthPickerSortKey nextMonth = const _MonthPickerSortKey(2.0);
   static const _MonthPickerSortKey calendar = const _MonthPickerSortKey(3.0);
 
@@ -679,12 +683,11 @@ class _HijriDayPickerGridDelegate extends SliverGridDelegate {
 }
 
 const _HijriDayPickerGridDelegate _kDayPickerGridDelegate =
-    const _HijriDayPickerGridDelegate();
+const _HijriDayPickerGridDelegate();
 
 class HijriDayPicker extends StatelessWidget {
   /// Creates a day picker.
   ///
-  /// Rarely used directly. Instead, typically used as part of a [MonthPicker].
   HijriDayPicker({
     Key key,
     @required this.selectedDate,
@@ -697,32 +700,28 @@ class HijriDayPicker extends StatelessWidget {
   })  : assert(selectedDate != null),
         assert(onChanged != null),
         assert(
-            !firstDate.isAfter(lastDate.hYear, lastDate.hMonth, lastDate.hDay)),
-        assert(selectedDate.isAfter(
-                firstDate.hYear, firstDate.hMonth, firstDate.hDay) ||
-            selectedDate.isAtSameMomentAs(
-                firstDate.hYear, firstDate.hMonth, firstDate.hDay)),
+        !firstDate.isAfter(lastDate.hYear, lastDate.hMonth, lastDate.hDay)),
         super(key: key);
 
   /// The currently selected date.
   ///
   /// This date is highlighted in the picker.
-  final ummAlquraCalendar selectedDate;
+  final UmmAlquraCalendar selectedDate;
 
   /// The current date at the time the picker is displayed.
-  final ummAlquraCalendar currentDate;
+  final UmmAlquraCalendar currentDate;
 
   /// Called when the user picks a day.
-  final ValueChanged<ummAlquraCalendar> onChanged;
+  final ValueChanged<UmmAlquraCalendar> onChanged;
 
   /// The earliest date the user is permitted to pick.
-  final ummAlquraCalendar firstDate;
+  final UmmAlquraCalendar firstDate;
 
   /// The latest date the user is permitted to pick.
-  final ummAlquraCalendar lastDate;
+  final UmmAlquraCalendar lastDate;
 
   /// The month whose days are displayed by this picker.
-  final ummAlquraCalendar displayedMonth;
+  final UmmAlquraCalendar displayedMonth;
 
   /// Optional user supplied predicate function to customize selectable days.
   final SelectableDayPredicate selectableDayPredicate;
@@ -730,12 +729,16 @@ class HijriDayPicker extends StatelessWidget {
   List<Widget> _getDayHeaders(
       TextStyle headerStyle, MaterialLocalizations localizations) {
     final List<Widget> result = <Widget>[];
-    for (int i = localizations.firstDayOfWeekIndex; true; i = (i + 1) % 7) {
+
+    /// { 0 } pick first day of week as sunday
+    for (int i = 0; true; i = (i + 1) % 7) {
       final String weekday = localizations.narrowWeekdays[i];
       result.add(new ExcludeSemantics(
         child: new Center(child: new Text(weekday, style: headerStyle)),
       ));
-      if (i == (localizations.firstDayOfWeekIndex - 1) % 7) break;
+
+      /// { 0 } pick first day of week as sunday
+      if (i == (0 - 1) % 7) break;
     }
     return result;
   }
@@ -746,11 +749,11 @@ class HijriDayPicker extends StatelessWidget {
   /// This applies the leap year logic introduced by the Gregorian reforms of
   /// 1582. It will not give valid results for dates prior to that time.
   static int getDaysInMonth(int year, int month) {
-    return ummAlquraCalendar().getDaysInMonth(year, month);
+    return UmmAlquraCalendar().getDaysInMonth(year, month);
   }
 
   int _computeFirstDayOffset(int year, int month) {
-    var convertDate = new ummAlquraCalendar();
+    var convertDate = new UmmAlquraCalendar();
     DateTime wkDay = convertDate.hijriToGregorian(year, month, 1);
     // 0-based day of week, with 0 representing Monday.
     final int weekdayFromMonday = wkDay.weekday - 1;
@@ -767,7 +770,9 @@ class HijriDayPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
     final MaterialLocalizations localizations =
-        MaterialLocalizations.of(context);
+    MaterialLocalizations.of(context);
+
+
     final int year = displayedMonth.hYear;
     final int month = displayedMonth.hMonth;
     final int daysInMonth = getDaysInMonth(year, month);
@@ -782,37 +787,37 @@ class HijriDayPicker extends StatelessWidget {
       if (day < 1) {
         labels.add(new Container());
       } else {
-        final ummAlquraCalendar dayToBuild = new ummAlquraCalendar()
+        final UmmAlquraCalendar dayToBuild = new UmmAlquraCalendar()
           ..hYear = year
           ..hMonth = month
           ..hDay = day;
         final bool disabled = dayToBuild.isAfter(
-                lastDate.hYear, lastDate.hMonth, lastDate.hDay) ||
+            lastDate.hYear, lastDate.hMonth, lastDate.hDay) ||
             dayToBuild.isBefore(
                 firstDate.hYear, firstDate.hMonth, firstDate.hDay) ||
             (selectableDayPredicate != null &&
                 !selectableDayPredicate(dayToBuild));
 
         BoxDecoration decoration;
-        TextStyle itemStyle = themeData.textTheme.body1;
+        TextStyle itemStyle = themeData.textTheme.bodyText2;
 
         final bool isSelectedDay = selectedDate.hYear == year &&
             selectedDate.hMonth == month &&
             selectedDate.hDay == day;
         if (isSelectedDay) {
           // The selected day gets a circle background highlight, and a contrasting text color.
-          itemStyle = themeData.accentTextTheme.body2;
+          itemStyle = themeData.accentTextTheme.bodyText1;
           decoration = new BoxDecoration(
               color: themeData.accentColor, shape: BoxShape.circle);
         } else if (disabled) {
-          itemStyle = themeData.textTheme.body1
+          itemStyle = themeData.textTheme.bodyText2
               .copyWith(color: themeData.disabledColor);
         } else if (currentDate.hYear == year &&
             currentDate.hMonth == month &&
             currentDate.hDay == day) {
           // The current day gets a different text color.
           itemStyle =
-              themeData.textTheme.body2.copyWith(color: themeData.accentColor);
+              themeData.textTheme.bodyText1.copyWith(color: themeData.accentColor);
         }
 
         Widget dayWidget = new Container(
@@ -825,8 +830,8 @@ class HijriDayPicker extends StatelessWidget {
               // day of month before the rest of the date, as they are looking
               // for the day of month. To do that we prepend day of month to the
               // formatted full date.
-              label: '${localizations.formatDecimal(day)}, ${dayToBuild
-                  .toString()}',
+              label:
+              '${localizations.formatDecimal(day)}, ${dayToBuild.toString()}',
               selected: isSelectedDay,
               child: new ExcludeSemantics(
                 child: new Text(localizations.formatDecimal(day),
@@ -860,7 +865,7 @@ class HijriDayPicker extends StatelessWidget {
               child: new ExcludeSemantics(
                 child: new Text(
                   "${displayedMonth.toFormat("MMMM")} ${displayedMonth.hYear}",
-                  style: themeData.textTheme.subhead,
+                  style: themeData.textTheme.subtitle1,
                 ),
               ),
             ),
@@ -906,22 +911,22 @@ class HijriYearPicker extends StatefulWidget {
   })  : assert(selectedDate != null),
         assert(onChanged != null),
         assert(
-            !firstDate.isAfter(lastDate.hYear, lastDate.hMonth, lastDate.hDay)),
+        !firstDate.isAfter(lastDate.hYear, lastDate.hMonth, lastDate.hDay)),
         super(key: key);
 
   /// The currently selected date.
   ///
   /// This date is highlighted in the picker.
-  final ummAlquraCalendar selectedDate;
+  final UmmAlquraCalendar selectedDate;
 
   /// Called when the user picks a year.
-  final ValueChanged<ummAlquraCalendar> onChanged;
+  final ValueChanged<UmmAlquraCalendar> onChanged;
 
   /// The earliest date the user is permitted to pick.
-  final ummAlquraCalendar firstDate;
+  final UmmAlquraCalendar firstDate;
 
   /// The latest date the user is permitted to pick.
-  final ummAlquraCalendar lastDate;
+  final UmmAlquraCalendar lastDate;
 
   @override
   _HijriYearPickerState createState() => new _HijriYearPickerState();
@@ -937,15 +942,16 @@ class _HijriYearPickerState extends State<HijriYearPicker> {
     scrollController = new ScrollController(
       // Move the initial scroll position to the currently selected date's year.
       initialScrollOffset:
-          (widget.selectedDate.hYear - widget.firstDate.hYear) * _itemExtent,
+      (widget.selectedDate.hYear - widget.firstDate.hYear) * _itemExtent,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasMaterial(context));
+
     final ThemeData themeData = Theme.of(context);
-    final TextStyle style = themeData.textTheme.body1;
+    final TextStyle style = themeData.textTheme.bodyText2;
     return new ListView.builder(
       controller: scrollController,
       itemExtent: _itemExtent,
@@ -954,17 +960,18 @@ class _HijriYearPickerState extends State<HijriYearPicker> {
         final int year = widget.firstDate.hYear + index;
         final bool isSelected = year == widget.selectedDate.hYear;
         final TextStyle itemStyle = isSelected
-            ? themeData.textTheme.headline
-                .copyWith(color: themeData.accentColor)
+            ? themeData.textTheme.headline5
+            .copyWith(color: themeData.accentColor)
             : style;
         return new InkWell(
           key: new ValueKey<int>(year),
           onTap: () {
             // year, widget.selectedDate.hMonth, widget.selectedDate.hMonth
-            widget.onChanged(new ummAlquraCalendar()
+            widget.onChanged(new UmmAlquraCalendar()
               ..hYear = year
               ..hMonth = widget.selectedDate.hMonth
-              ..hDay = widget.selectedDate.hDay);
+              ..hDay = widget.selectedDate.hDay
+            );
           },
           child: new Center(
             child: new Semantics(
@@ -978,27 +985,27 @@ class _HijriYearPickerState extends State<HijriYearPicker> {
   }
 }
 
-Future<ummAlquraCalendar> showHijriDatePicker({
+Future<UmmAlquraCalendar> showHijriDatePicker({
   @required BuildContext context,
-  @required ummAlquraCalendar initialDate,
-  @required ummAlquraCalendar firstDate,
-  @required ummAlquraCalendar lastDate,
+  @required UmmAlquraCalendar initialDate,
+  @required UmmAlquraCalendar firstDate,
+  @required UmmAlquraCalendar lastDate,
   SelectableDayPredicate selectableDayPredicate,
   DatePickerMode initialDatePickerMode: DatePickerMode.day,
   Locale locale,
   TextDirection textDirection,
 }) async {
   assert(
-      !initialDate.isBefore(firstDate.hYear, firstDate.hMonth, firstDate.hDay),
-      'initialDate must be on or after firstDate');
+  !initialDate.isBefore(firstDate.hYear, firstDate.hMonth, firstDate.hDay),
+  'initialDate must be on or after firstDate');
   assert(!initialDate.isAfter(lastDate.hYear, lastDate.hMonth, lastDate.hDay),
-      'initialDate must be on or before lastDate');
+  'initialDate must be on or before lastDate');
   assert(!firstDate.isAfter(lastDate.hYear, lastDate.hMonth, lastDate.hDay),
-      'lastDate must be on or after firstDate');
+  'lastDate must be on or after firstDate');
   assert(selectableDayPredicate == null || selectableDayPredicate(initialDate),
-      'Provided initialDate must satisfy provided selectableDayPredicate');
+  'Provided initialDate must satisfy provided selectableDayPredicate');
   assert(
-      initialDatePickerMode != null, 'initialDatePickerMode must not be null');
+  initialDatePickerMode != null, 'initialDatePickerMode must not be null');
 
   Widget child = new HijriDatePickerDialog(
     initialDate: initialDate,
@@ -1016,6 +1023,7 @@ Future<ummAlquraCalendar> showHijriDatePicker({
   }
 
   if (locale != null) {
+
     child = new Localizations.override(
       context: context,
       locale: locale,
@@ -1023,7 +1031,7 @@ Future<ummAlquraCalendar> showHijriDatePicker({
     );
   }
 
-  return await showDialog<ummAlquraCalendar>(
+  return await showDialog<UmmAlquraCalendar>(
     context: context,
     builder: (BuildContext context) => child,
   );
