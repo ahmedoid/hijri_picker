@@ -3,7 +3,7 @@
 
 .packages
 .pub/
-
+web/
 build/
 
 .flutter-plugins

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:hijri/umm_alqura_calendar.dart';
+import 'package:hijri/hijri_calendar.dart';
 import 'package:hijri_picker/hijri_picker.dart';
 
 void main() => runApp(new MyApp());
@@ -41,11 +41,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  UmmAlquraCalendar selectedDate = new UmmAlquraCalendar.now();
+  var selectedDate = new HijriCalendar.now();
 
   @override
   Widget build(BuildContext context) {
-    UmmAlquraCalendar.setLocal(Localizations.localeOf(context).languageCode);
+    HijriCalendar.setLocal(Localizations.localeOf(context).languageCode);
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(widget.title),
@@ -59,11 +59,11 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               new Text(
                 '${selectedDate.toString()}',
-                style: Theme.of(context).textTheme.headline,
+                style: Theme.of(context).textTheme.headline5,
               ),
               new Text(
                 '${selectedDate.fullDate()}',
-                style: Theme.of(context).textTheme.headline,
+                style: Theme.of(context).textTheme.headline5,
               ),
 
             ],
@@ -79,21 +79,20 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<Null> _selectDate(BuildContext context) async {
-    final UmmAlquraCalendar picked = await showHijriDatePicker(
+    final HijriCalendar picked = await showHijriDatePicker(
       context: context,
       initialDate: selectedDate,
 
-      lastDate: new UmmAlquraCalendar()
+      lastDate: new HijriCalendar()
         ..hYear = 1445
         ..hMonth = 9
         ..hDay = 25,
-      firstDate: new UmmAlquraCalendar()
+      firstDate: new HijriCalendar()
         ..hYear = 1438
         ..hMonth = 12
         ..hDay = 25,
       initialDatePickerMode: DatePickerMode.day,
     );
-    print(picked);
     if (picked != null)
       setState(() {
         selectedDate = picked;

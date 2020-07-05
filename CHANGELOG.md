@@ -1,4 +1,7 @@
 # Changelog
+## 2.0.0
+
+- Update hijri package to last
 
 ## 1.0.3
 
