@@ -7,14 +7,14 @@ Hijri calender to pick umm alqura dates support max & min dates
 Simple Usage
 -
 ```dart in html
- final ummAlquraCalendar picked = await showHijriDatePicker(
+ final HijriCalendar picked = await showHijriDatePicker(
        context: context,
        initialDate: selectedDate,
-       lastDate: new ummAlquraCalendar()
+       lastDate: new HijriCalendar()
          ..hYear = 1442
          ..hMonth = 9
          ..hDay = 25,
-       firstDate: new ummAlquraCalendar()
+       firstDate: new HijriCalendar()
          ..hYear = 1438
          ..hMonth = 12
          ..hDay = 25,

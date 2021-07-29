@@ -37,14 +37,14 @@ Add local to `MaterialApp`
 
 
 ```dart in html
- final ummAlquraCalendar picked = await showHijriDatePicker(
+ final HijriCalendar? picked = await showHijriDatePicker(
        context: context,
        initialDate: selectedDate,
-       lastDate: new ummAlquraCalendar()
+       lastDate: HijriCalendar()
          ..hYear = 1442
          ..hMonth = 9
          ..hDay = 25,
-       firstDate: new ummAlquraCalendar()
+       firstDate: HijriCalendar()
          ..hYear = 1438
          ..hMonth = 12
          ..hDay = 25,
@@ -55,15 +55,15 @@ Add local to `MaterialApp`
 ## As Widget استخدام كـ
 ```dart in html
               HijriMonthPicker(
-                lastDate: new UmmAlquraCalendar()
+                lastDate: HijriCalendar()
                   ..hYear = 1445
                   ..hMonth = 9
                   ..hDay = 25,
-                firstDate: new UmmAlquraCalendar()
+                firstDate: HijriCalendar()
                   ..hYear = 1438
                   ..hMonth = 12
                   ..hDay = 25,
-                onChanged: (UmmAlquraCalendar value) {
+                onChanged: (HijriCalendar value) {
                   setState(() {
                     selectedDate = selectedDate;
                   });

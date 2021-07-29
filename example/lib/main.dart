@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -65,7 +65,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 '${selectedDate.fullDate()}',
                 style: Theme.of(context).textTheme.headline5,
               ),
-
             ],
           ),
         ),
@@ -79,10 +78,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<Null> _selectDate(BuildContext context) async {
-    final HijriCalendar picked = await showHijriDatePicker(
+    final HijriCalendar? picked = await showHijriDatePicker(
       context: context,
       initialDate: selectedDate,
-
       lastDate: new HijriCalendar()
         ..hYear = 1445
         ..hMonth = 9
