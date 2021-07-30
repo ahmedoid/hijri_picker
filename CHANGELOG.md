@@ -1,4 +1,8 @@
 # Changelog
+## 3.0.0
+
+- Migrated to null safety
+
 ## 2.0.0
 
 - Update hijri package to last
