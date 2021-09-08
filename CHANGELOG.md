@@ -1,4 +1,8 @@
 # Changelog
+## 3.1.0
+
+- Added custom builders for days and weekdays in `HijriMonthPicker()`
+
 ## 3.0.0
 
 - Migrated to null safety
