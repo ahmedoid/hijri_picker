@@ -9,6 +9,10 @@ import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:hijri/hijri_calendar.dart';
 
+import 'package:hijri_picker/src/hijri_calendar_builders.dart';
+
+export 'src/hijri_calendar_builders.dart';
+
 const double _kMonthPickerPortraitWidth = 330.0;
 const double _kMonthPickerLandscapeWidth = 344.0;
 const double _kDatePickerHeaderPortraitHeight = 100.0;
@@ -400,6 +404,7 @@ class HijriMonthPicker extends StatefulWidget {
     required this.firstDate,
     required this.lastDate,
     this.selectableDayPredicate,
+    this.builders = const HijriCalendarBuilders(),
   })  : assert(
             !firstDate.isAfter(lastDate.hYear, lastDate.hMonth, lastDate.hDay)),
         /*  assert(selectedDate.isAfter(
@@ -424,6 +429,9 @@ class HijriMonthPicker extends StatefulWidget {
 
   /// Optional user supplied predicate function to customize selectable days.
   final SelectableDayPredicate? selectableDayPredicate;
+
+  /// Optional custom calendar builders
+  final HijriCalendarBuilders builders;
 
   @override
   _HijriMonthPickerState createState() => new _HijriMonthPickerState();
@@ -514,6 +522,7 @@ class _HijriMonthPickerState extends State<HijriMonthPicker> {
       lastDate: widget.lastDate,
       displayedMonth: month,
       selectableDayPredicate: widget.selectableDayPredicate,
+      builders: widget.builders,
     );
   }
 
@@ -686,6 +695,7 @@ class HijriDayPicker extends StatelessWidget {
     required this.lastDate,
     this.selectableDayPredicate,
     required this.displayedMonth,
+    required this.builders,
   })  : assert(
             !firstDate.isAfter(lastDate.hYear, lastDate.hMonth, lastDate.hDay)),
         super(key: key);
@@ -713,16 +723,24 @@ class HijriDayPicker extends StatelessWidget {
   /// Optional user supplied predicate function to customize selectable days.
   final SelectableDayPredicate? selectableDayPredicate;
 
-  List<Widget> _getDayHeaders(
-      TextStyle? headerStyle, MaterialLocalizations localizations) {
+  /// Calendar builders
+  final HijriCalendarBuilders builders;
+
+  List<Widget> _getDayHeaders(BuildContext context, TextStyle? headerStyle,
+      MaterialLocalizations localizations) {
     final List<Widget> result = <Widget>[];
 
     /// { 0 } pick first day of week as sunday
     for (int i = 0; true; i = (i + 1) % 7) {
       final String weekday = localizations.narrowWeekdays[i];
-      result.add(new ExcludeSemantics(
-        child: new Center(child: new Text(weekday, style: headerStyle)),
-      ));
+
+      Widget weekdayWidget = builders.weekdayBuilder == null
+          ? ExcludeSemantics(
+              child: Center(child: Text(weekday, style: headerStyle)),
+            )
+          : builders.weekdayBuilder!(context, weekday);
+
+      result.add(weekdayWidget);
 
       /// { 0 } pick first day of week as sunday
       if (i == (0 - 1) % 7) break;
@@ -764,7 +782,10 @@ class HijriDayPicker extends StatelessWidget {
     final int daysInMonth = getDaysInMonth(year, month);
     final int firstDayOffset = _computeFirstDayOffset(year, month);
     final List<Widget> labels = <Widget>[];
-    labels.addAll(_getDayHeaders(themeData.textTheme.caption, localizations));
+
+    labels.addAll(
+        _getDayHeaders(context, themeData.textTheme.caption, localizations));
+
     for (int i = 0; true; i += 1) {
       final int day = i - firstDayOffset + 1;
       if (day > daysInMonth) break;
@@ -804,26 +825,29 @@ class HijriDayPicker extends StatelessWidget {
               ?.copyWith(color: themeData.accentColor);
         }
 
-        Widget dayWidget = new Container(
-          decoration: decoration,
-          child: new Center(
-            child: new Semantics(
-              // We want the day of month to be spoken first irrespective of the
-              // locale-specific preferences or TextDirection. This is because
-              // an accessibility user is more likely to be interested in the
-              // day of month before the rest of the date, as they are looking
-              // for the day of month. To do that we prepend day of month to the
-              // formatted full date.
-              label:
-                  '${localizations.formatDecimal(day)}, ${dayToBuild.toString()}',
-              selected: isSelectedDay,
-              child: new ExcludeSemantics(
-                child: new Text(localizations.formatDecimal(day),
-                    style: itemStyle),
-              ),
-            ),
-          ),
-        );
+        final String dayText = localizations.formatDecimal(day);
+        final bool useBuiltInDayBuilder = builders.dayBuilder == null;
+
+        Widget dayWidget = useBuiltInDayBuilder
+            ? Container(
+                decoration: decoration,
+                child: new Center(
+                  child: new Semantics(
+                    // We want the day of month to be spoken first irrespective of the
+                    // locale-specific preferences or TextDirection. This is because
+                    // an accessibility user is more likely to be interested in the
+                    // day of month before the rest of the date, as they are looking
+                    // for the day of month. To do that we prepend day of month to the
+                    // formatted full date.
+                    label: '$dayText, ${dayToBuild.toString()}',
+                    selected: isSelectedDay,
+                    child: ExcludeSemantics(
+                      child: Text(dayText, style: itemStyle),
+                    ),
+                  ),
+                ),
+              )
+            : builders.dayBuilder!(context, dayToBuild, isSelectedDay);
 
         if (!disabled) {
           dayWidget = new GestureDetector(
