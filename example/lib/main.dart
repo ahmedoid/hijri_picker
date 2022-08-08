@@ -24,8 +24,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: new ThemeData(
           primaryColor: Colors.brown,
-          accentColor: Colors.green,
-          brightness: Brightness.dark,
+          brightness: Brightness.dark, 
+          colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.green),
         ),
         home: MyHomePage(title: "Umm Alqura Calendar"));
   }
