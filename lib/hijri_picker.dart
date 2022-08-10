@@ -5,7 +5,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:hijri/hijri_calendar.dart';
 
@@ -273,7 +272,7 @@ class _DatePickerHeader extends StatelessWidget {
     final TextTheme headerTextTheme = themeData.primaryTextTheme;
     Color dayColor;
     Color yearColor;
-    switch (themeData.primaryColorBrightness) {
+    switch (themeData.brightness) {
       case Brightness.light:
         dayColor = mode == DatePickerMode.day ? Colors.black87 : Colors.black54;
         yearColor =
@@ -339,8 +338,11 @@ class _DatePickerHeader extends StatelessWidget {
             () => _handleChangeMode(DatePickerMode.day), context),
         child: new Semantics(
           selected: mode == DatePickerMode.day,
-          child: new Text("${hSelectedDate.toFormat("DD,dd MMMM")}",
-              style: dayStyle),
+          child: FittedBox(
+            fit: BoxFit.fitHeight,
+            child: new Text("${hSelectedDate.toFormat("DD,dd MMMM")}",
+                style: dayStyle),
+          ),
         ),
       ),
     );
@@ -811,9 +813,11 @@ class HijriDayPicker extends StatelessWidget {
             selectedDate.hDay == day;
         if (isSelectedDay) {
           // The selected day gets a circle background highlight, and a contrasting text color.
-          itemStyle = themeData.accentTextTheme.bodyText1;
+          itemStyle = themeData.textTheme.bodyText1?.copyWith(
+            color: themeData.colorScheme.onSecondary,
+          );
           decoration = new BoxDecoration(
-              color: themeData.accentColor, shape: BoxShape.circle);
+              color: themeData.colorScheme.secondary, shape: BoxShape.circle);
         } else if (disabled) {
           itemStyle = themeData.textTheme.bodyText2
               ?.copyWith(color: themeData.disabledColor);
@@ -822,7 +826,7 @@ class HijriDayPicker extends StatelessWidget {
             currentDate.hDay == day) {
           // The current day gets a different text color.
           itemStyle = themeData.textTheme.bodyText1
-              ?.copyWith(color: themeData.accentColor);
+              ?.copyWith(color: themeData.colorScheme.secondary);
         }
 
         final String dayText = localizations.formatDecimal(day);
@@ -967,7 +971,7 @@ class _HijriYearPickerState extends State<HijriYearPicker> {
         final bool isSelected = year == widget.selectedDate.hYear;
         final TextStyle? itemStyle = isSelected
             ? themeData.textTheme.headline5
-                ?.copyWith(color: themeData.accentColor)
+                ?.copyWith(color: themeData.colorScheme.secondary)
             : style;
         return new InkWell(
           key: new ValueKey<int>(year),
