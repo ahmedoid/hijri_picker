@@ -5,13 +5,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:hijri_picker/hijri_picker.dart';
 
-void main() => runApp(new MyApp());
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
         title: 'Flutter Demo',
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
@@ -22,10 +22,9 @@ class MyApp extends StatelessWidget {
           const Locale('ar', 'SA'),
         ],
         debugShowCheckedModeBanner: false,
-        theme: new ThemeData(
+        theme: ThemeData(
           primaryColor: Colors.brown,
-          brightness: Brightness.dark, 
-          colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.green),
+          brightness: Brightness.light
         ),
         home: MyHomePage(title: "Umm Alqura Calendar"));
   }
@@ -37,42 +36,42 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var selectedDate = new HijriCalendar.now();
+  var selectedDate = HijriCalendar.now();
 
   @override
   Widget build(BuildContext context) {
     HijriCalendar.setLocal(Localizations.localeOf(context).languageCode);
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(widget.title),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
       ),
-      body: new Padding(
+      body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: new Center(
-          child: new Column(
+        child: Center(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             //   crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              new Text(
+              Text(
                 '${selectedDate.toString()}',
-                style: Theme.of(context).textTheme.headline5,
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
-              new Text(
+              Text(
                 '${selectedDate.fullDate()}',
-                style: Theme.of(context).textTheme.headline5,
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
             ],
           ),
         ),
       ),
-      floatingActionButton: new FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: () => _selectDate(context),
         tooltip: 'Pick Date',
-        child: new Icon(Icons.event),
+        child: Icon(Icons.event),
       ),
     );
   }
@@ -81,11 +80,11 @@ class _MyHomePageState extends State<MyHomePage> {
     final HijriCalendar? picked = await showHijriDatePicker(
       context: context,
       initialDate: selectedDate,
-      lastDate: new HijriCalendar()
+      lastDate: HijriCalendar()
         ..hYear = 1445
         ..hMonth = 9
         ..hDay = 25,
-      firstDate: new HijriCalendar()
+      firstDate: HijriCalendar()
         ..hYear = 1438
         ..hMonth = 12
         ..hDay = 25,
