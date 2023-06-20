@@ -48,7 +48,7 @@ class HijriDatePickerDialog extends StatefulWidget {
   final DatePickerMode initialDatePickerMode;
 
   @override
-  _DatePickerDialogState createState() => new _DatePickerDialogState();
+  _DatePickerDialogState createState() => _DatePickerDialogState();
 }
 
 class _DatePickerDialogState extends State<HijriDatePickerDialog> {
@@ -80,7 +80,7 @@ class _DatePickerDialogState extends State<HijriDatePickerDialog> {
 
   late HijriCalendar _selectedDate;
   late DatePickerMode _mode;
-  final GlobalKey _pickerKey = new GlobalKey();
+  final GlobalKey _pickerKey = GlobalKey();
 
   void _vibrate() {
     switch (Theme.of(context).platform) {
@@ -137,7 +137,7 @@ class _DatePickerDialogState extends State<HijriDatePickerDialog> {
   Widget _buildPicker() {
     switch (_mode) {
       case DatePickerMode.day:
-        return new HijriMonthPicker(
+        return HijriMonthPicker(
           key: _pickerKey,
           selectedDate: _selectedDate,
           onChanged: _handleDayChanged,
@@ -146,7 +146,7 @@ class _DatePickerDialogState extends State<HijriDatePickerDialog> {
           selectableDayPredicate: widget.selectableDayPredicate,
         );
       case DatePickerMode.year:
-        return new HijriYearPicker(
+        return HijriYearPicker(
           key: _pickerKey,
           selectedDate: _selectedDate,
           onChanged: _handleYearChanged,
@@ -161,30 +161,30 @@ class _DatePickerDialogState extends State<HijriDatePickerDialog> {
     final ThemeData theme = Theme.of(context);
     HijriCalendar.setLocal(Localizations.localeOf(context).languageCode);
 
-    final Widget picker = new Flexible(
-      child: new SizedBox(
+    final Widget picker = Flexible(
+      child: SizedBox(
         height: _kMaxDayPickerHeight,
         child: _buildPicker(),
       ),
     );
-    final Widget actions = new ButtonBarTheme(
+    final Widget actions = ButtonBarTheme(
       data: ButtonBarThemeData(),
-      child: new ButtonBar(
+      child: ButtonBar(
         children: <Widget>[
-          new TextButton(
-            child: new Text(localizations.cancelButtonLabel),
+          TextButton(
+            child: Text(localizations.cancelButtonLabel),
             onPressed: _handleCancel,
           ),
-          new TextButton(
-            child: new Text(localizations.okButtonLabel),
+          TextButton(
+            child: Text(localizations.okButtonLabel),
             onPressed: _handleOk,
           ),
         ],
       ),
     );
-    final Dialog dialog = new Dialog(child: new OrientationBuilder(
+    final Dialog dialog = Dialog(child: OrientationBuilder(
         builder: (BuildContext context, Orientation orientation) {
-      final Widget header = new _DatePickerHeader(
+      final Widget header = _DatePickerHeader(
         hSelectedDate: _selectedDate,
         mode: _mode,
         onModeChanged: _handleModeChanged,
@@ -192,16 +192,16 @@ class _DatePickerDialogState extends State<HijriDatePickerDialog> {
       );
       switch (orientation) {
         case Orientation.portrait:
-          return new SizedBox(
+          return SizedBox(
             width: _kMonthPickerPortraitWidth,
-            child: new Column(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 header,
-                new Container(
+                Container(
                   color: theme.dialogBackgroundColor,
-                  child: new Column(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
@@ -214,18 +214,18 @@ class _DatePickerDialogState extends State<HijriDatePickerDialog> {
             ),
           );
         case Orientation.landscape:
-          return new SizedBox(
+          return SizedBox(
             height: _kDatePickerLandscapeHeight,
-            child: new Row(
+            child: Row(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 header,
-                new Flexible(
-                  child: new Container(
+                Flexible(
+                  child: Container(
                     width: _kMonthPickerLandscapeWidth,
                     color: theme.dialogBackgroundColor,
-                    child: new Column(
+                    child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[picker, actions],
@@ -238,7 +238,7 @@ class _DatePickerDialogState extends State<HijriDatePickerDialog> {
       }
     }));
 
-    return new Theme(
+    return Theme(
       data: theme.copyWith(
         dialogBackgroundColor: Colors.transparent,
       ),
@@ -284,9 +284,9 @@ class _DatePickerHeader extends StatelessWidget {
         break;
     }
     final TextStyle? dayStyle =
-        headerTextTheme.headline4?.copyWith(color: dayColor, height: 1.4);
+        headerTextTheme.headlineMedium?.copyWith(color: dayColor, height: 1.4);
     final TextStyle? yearStyle =
-        headerTextTheme.subtitle1?.copyWith(color: yearColor, height: 1.4);
+        headerTextTheme.titleMedium?.copyWith(color: yearColor, height: 1.4);
 
     Color backgroundColor;
     switch (themeData.brightness) {
@@ -294,7 +294,7 @@ class _DatePickerHeader extends StatelessWidget {
         backgroundColor = themeData.primaryColor;
         break;
       case Brightness.dark:
-        backgroundColor = themeData.backgroundColor;
+        backgroundColor = themeData.colorScheme.background;
         break;
     }
 
@@ -315,44 +315,44 @@ class _DatePickerHeader extends StatelessWidget {
         break;
     }
 
-    final Widget yearButton = new IgnorePointer(
+    final Widget yearButton = IgnorePointer(
       ignoring: mode != DatePickerMode.day,
       ignoringSemantics: false,
-      child: new _DateHeaderButton(
+      child: _DateHeaderButton(
         color: backgroundColor,
         onTap: Feedback.wrapForTap(
             () => _handleChangeMode(DatePickerMode.year), context),
-        child: new Semantics(
+        child: Semantics(
           selected: mode == DatePickerMode.year,
-          child: new Text("${hSelectedDate.hYear}", style: yearStyle),
+          child: Text("${hSelectedDate.hYear}", style: yearStyle),
         ),
       ),
     );
 
-    final Widget dayButton = new IgnorePointer(
+    final Widget dayButton = IgnorePointer(
       ignoring: mode == DatePickerMode.day,
       ignoringSemantics: false,
-      child: new _DateHeaderButton(
+      child: _DateHeaderButton(
         color: backgroundColor,
         onTap: Feedback.wrapForTap(
             () => _handleChangeMode(DatePickerMode.day), context),
-        child: new Semantics(
+        child: Semantics(
           selected: mode == DatePickerMode.day,
           child: FittedBox(
             fit: BoxFit.fitHeight,
-            child: new Text("${hSelectedDate.toFormat("DD,dd MMMM")}",
+            child: Text("${hSelectedDate.toFormat("DD,dd MMMM")}",
                 style: dayStyle),
           ),
         ),
       ),
     );
 
-    return new Container(
+    return Container(
       width: width,
       height: height,
       padding: padding,
       color: backgroundColor,
-      child: new Column(
+      child: Column(
         mainAxisAlignment: mainAxisAlignment,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[yearButton, dayButton],
@@ -377,15 +377,15 @@ class _DateHeaderButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
-    return new Material(
+    return Material(
       type: MaterialType.button,
       color: color,
-      child: new InkWell(
+      child: InkWell(
         borderRadius: kMaterialEdges[MaterialType.button],
         highlightColor: theme.highlightColor,
         splashColor: theme.splashColor,
         onTap: onTap,
-        child: new Container(
+        child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: child,
         ),
@@ -436,7 +436,7 @@ class HijriMonthPicker extends StatefulWidget {
   final HijriCalendarBuilders builders;
 
   @override
-  _HijriMonthPickerState createState() => new _HijriMonthPickerState();
+  _HijriMonthPickerState createState() => _HijriMonthPickerState();
 }
 
 class _HijriMonthPickerState extends State<HijriMonthPicker> {
@@ -445,7 +445,7 @@ class _HijriMonthPickerState extends State<HijriMonthPicker> {
     super.initState();
     // Initially display the pre-selected date.
     final int monthPage = _monthDelta(widget.firstDate, widget.selectedDate);
-    _dayPickerController = new PageController(initialPage: monthPage);
+    _dayPickerController = PageController(initialPage: monthPage);
     _handleMonthPageChanged(monthPage);
     _updateCurrentDate();
   }
@@ -456,7 +456,7 @@ class _HijriMonthPickerState extends State<HijriMonthPicker> {
     if (!widget.selectedDate.isAtSameMomentAs(oldWidget.selectedDate.hYear,
         oldWidget.selectedDate.hMonth, oldWidget.selectedDate.hDay)) {
       final int monthPage = _monthDelta(widget.firstDate, widget.selectedDate);
-      _dayPickerController = new PageController(initialPage: monthPage);
+      _dayPickerController = PageController(initialPage: monthPage);
       _handleMonthPageChanged(monthPage);
     }
   }
@@ -477,8 +477,8 @@ class _HijriMonthPickerState extends State<HijriMonthPicker> {
   PageController? _dayPickerController;
 
   void _updateCurrentDate() {
-    _todayDate = new HijriCalendar.now();
-    final HijriCalendar tomorrow = new HijriCalendar()
+    _todayDate = HijriCalendar.now();
+    final HijriCalendar tomorrow = HijriCalendar()
       ..hYear = _todayDate.hYear
       ..hMonth = _todayDate.hMonth
       ..hDay = _todayDate.hDay + 1;
@@ -491,7 +491,7 @@ class _HijriMonthPickerState extends State<HijriMonthPicker> {
     timeUntilTomorrow +=
         const Duration(seconds: 1); // so we don't miss it by rounding
     _timer?.cancel();
-    _timer = new Timer(timeUntilTomorrow, () {
+    _timer = Timer(timeUntilTomorrow, () {
       setState(() {
         _updateCurrentDate();
       });
@@ -507,7 +507,7 @@ class _HijriMonthPickerState extends State<HijriMonthPicker> {
   /// Add months to a month truncated date.
   HijriCalendar _addMonthsToMonthDate(
       HijriCalendar monthDate, int monthsToAdd) {
-    var x = new HijriCalendar.addMonth(
+    var x = HijriCalendar.addMonth(
         monthDate.hYear + (monthDate.hMonth + monthsToAdd) ~/ 12,
         monthDate.hMonth + monthsToAdd % 12);
     return x;
@@ -515,8 +515,8 @@ class _HijriMonthPickerState extends State<HijriMonthPicker> {
 
   Widget _buildItems(BuildContext context, int index) {
     final month = _addMonthsToMonthDate(widget.firstDate, index);
-    return new HijriDayPicker(
-      key: new ValueKey<HijriCalendar>(month),
+    return HijriDayPicker(
+      key: ValueKey<HijriCalendar>(month),
       selectedDate: widget.selectedDate,
       currentDate: _todayDate,
       onChanged: widget.onChanged,
@@ -573,15 +573,15 @@ class _HijriMonthPickerState extends State<HijriMonthPicker> {
 
   @override
   Widget build(BuildContext context) {
-    return new SizedBox(
+    return SizedBox(
       width: _kMonthPickerPortraitWidth,
       height: _kMaxDayPickerHeight,
-      child: new Stack(
+      child: Stack(
         children: <Widget>[
-          new Semantics(
+          Semantics(
             sortKey: _MonthPickerSortKey.calendar,
-            child: new PageView.builder(
-              key: new ValueKey<HijriCalendar>(widget.selectedDate),
+            child: PageView.builder(
+              key: ValueKey<HijriCalendar>(widget.selectedDate),
               controller: _dayPickerController,
               scrollDirection: Axis.horizontal,
               itemCount: _monthDelta(widget.firstDate, widget.lastDate) + 1,
@@ -589,12 +589,12 @@ class _HijriMonthPickerState extends State<HijriMonthPicker> {
               onPageChanged: _handleMonthPageChanged,
             ),
           ),
-          new PositionedDirectional(
+          PositionedDirectional(
             top: 0.0,
             start: 8.0,
-            child: new Semantics(
+            child: Semantics(
               sortKey: _MonthPickerSortKey.previousMonth,
-              child: new IconButton(
+              child: IconButton(
                 icon: const Icon(Icons.chevron_left),
                 tooltip: _isDisplayingFirstMonth
                     ? null
@@ -604,12 +604,12 @@ class _HijriMonthPickerState extends State<HijriMonthPicker> {
               ),
             ),
           ),
-          new PositionedDirectional(
+          PositionedDirectional(
             top: 0.0,
             end: 8.0,
-            child: new Semantics(
+            child: Semantics(
               sortKey: _MonthPickerSortKey.nextMonth,
-              child: new IconButton(
+              child: IconButton(
                 icon: const Icon(Icons.chevron_right),
                 tooltip: _isDisplayingLastMonth
                     ? null
@@ -668,7 +668,7 @@ class _HijriDayPickerGridDelegate extends SliverGridDelegate {
     final double tileWidth = constraints.crossAxisExtent / columnCount;
     final double tileHeight = math.min(_kDayPickerRowHeight,
         constraints.viewportMainAxisExtent / (_kMaxDayPickerRowCount + 1));
-    return new SliverGridRegularTileLayout(
+    return SliverGridRegularTileLayout(
       crossAxisCount: columnCount,
       mainAxisStride: tileHeight,
       crossAxisStride: tileWidth,
@@ -760,7 +760,7 @@ class HijriDayPicker extends StatelessWidget {
   }
 
   int _computeFirstDayOffset(int year, int month) {
-    var convertDate = new HijriCalendar();
+    var convertDate = HijriCalendar();
     DateTime wkDay = convertDate.hijriToGregorian(year, month, 1);
     // 0-based day of week, with 0 representing Monday.
     final int weekdayFromMonday = wkDay.weekday - 1;
@@ -786,15 +786,15 @@ class HijriDayPicker extends StatelessWidget {
     final List<Widget> labels = <Widget>[];
 
     labels.addAll(
-        _getDayHeaders(context, themeData.textTheme.caption, localizations));
+        _getDayHeaders(context, themeData.textTheme.bodySmall, localizations));
 
     for (int i = 0; true; i += 1) {
       final int day = i - firstDayOffset + 1;
       if (day > daysInMonth) break;
       if (day < 1) {
-        labels.add(new Container());
+        labels.add(Container());
       } else {
-        final HijriCalendar dayToBuild = new HijriCalendar()
+        final HijriCalendar dayToBuild = HijriCalendar()
           ..hYear = year
           ..hMonth = month
           ..hDay = day;
@@ -806,26 +806,26 @@ class HijriDayPicker extends StatelessWidget {
                 !selectableDayPredicate!(dayToBuild));
 
         BoxDecoration? decoration;
-        TextStyle? itemStyle = themeData.textTheme.bodyText2;
+        TextStyle? itemStyle = themeData.textTheme.bodyMedium;
 
         final bool isSelectedDay = selectedDate.hYear == year &&
             selectedDate.hMonth == month &&
             selectedDate.hDay == day;
         if (isSelectedDay) {
           // The selected day gets a circle background highlight, and a contrasting text color.
-          itemStyle = themeData.textTheme.bodyText1?.copyWith(
+          itemStyle = themeData.textTheme.bodyLarge?.copyWith(
             color: themeData.colorScheme.onSecondary,
           );
-          decoration = new BoxDecoration(
+          decoration = BoxDecoration(
               color: themeData.colorScheme.secondary, shape: BoxShape.circle);
         } else if (disabled) {
-          itemStyle = themeData.textTheme.bodyText2
+          itemStyle = themeData.textTheme.bodyMedium
               ?.copyWith(color: themeData.disabledColor);
         } else if (currentDate.hYear == year &&
             currentDate.hMonth == month &&
             currentDate.hDay == day) {
           // The current day gets a different text color.
-          itemStyle = themeData.textTheme.bodyText1
+          itemStyle = themeData.textTheme.bodyLarge
               ?.copyWith(color: themeData.colorScheme.secondary);
         }
 
@@ -835,8 +835,8 @@ class HijriDayPicker extends StatelessWidget {
         Widget dayWidget = useBuiltInDayBuilder
             ? Container(
                 decoration: decoration,
-                child: new Center(
-                  child: new Semantics(
+                child: Center(
+                  child: Semantics(
                     // We want the day of month to be spoken first irrespective of the
                     // locale-specific preferences or TextDirection. This is because
                     // an accessibility user is more likely to be interested in the
@@ -854,7 +854,7 @@ class HijriDayPicker extends StatelessWidget {
             : builders.dayBuilder!(context, dayToBuild, isSelectedDay);
 
         if (!disabled) {
-          dayWidget = new GestureDetector(
+          dayWidget = GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () {
               onChanged(dayToBuild);
@@ -867,26 +867,26 @@ class HijriDayPicker extends StatelessWidget {
       }
     }
 
-    return new Padding(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: new Column(
+      child: Column(
         children: <Widget>[
-          new Container(
+          Container(
             height: _kDayPickerRowHeight,
-            child: new Center(
-              child: new ExcludeSemantics(
-                child: new Text(
+            child: Center(
+              child: ExcludeSemantics(
+                child: Text(
                   "${displayedMonth.toFormat("MMMM")} ${displayedMonth.hYear}",
-                  style: themeData.textTheme.subtitle1,
+                  style: themeData.textTheme.titleMedium,
                 ),
               ),
             ),
           ),
-          new Flexible(
-            child: new GridView.custom(
+          Flexible(
+            child: GridView.custom(
               gridDelegate: _kDayPickerGridDelegate,
-              childrenDelegate: new SliverChildListDelegate(labels,
-                  addRepaintBoundaries: false),
+              childrenDelegate:
+                  SliverChildListDelegate(labels, addRepaintBoundaries: false),
             ),
           ),
         ],
@@ -939,7 +939,7 @@ class HijriYearPicker extends StatefulWidget {
   final HijriCalendar lastDate;
 
   @override
-  _HijriYearPickerState createState() => new _HijriYearPickerState();
+  _HijriYearPickerState createState() => _HijriYearPickerState();
 }
 
 class _HijriYearPickerState extends State<HijriYearPicker> {
@@ -949,7 +949,7 @@ class _HijriYearPickerState extends State<HijriYearPicker> {
   @override
   void initState() {
     super.initState();
-    scrollController = new ScrollController(
+    scrollController = ScrollController(
       // Move the initial scroll position to the currently selected date's year.
       initialScrollOffset:
           (widget.selectedDate.hYear - widget.firstDate.hYear) * _itemExtent,
@@ -961,8 +961,8 @@ class _HijriYearPickerState extends State<HijriYearPicker> {
     assert(debugCheckHasMaterial(context));
 
     final ThemeData themeData = Theme.of(context);
-    final TextStyle? style = themeData.textTheme.bodyText2;
-    return new ListView.builder(
+    final TextStyle? style = themeData.textTheme.bodyMedium;
+    return ListView.builder(
       controller: scrollController,
       itemExtent: _itemExtent,
       itemCount: widget.lastDate.hYear - widget.firstDate.hYear + 1,
@@ -970,22 +970,22 @@ class _HijriYearPickerState extends State<HijriYearPicker> {
         final int year = widget.firstDate.hYear + index;
         final bool isSelected = year == widget.selectedDate.hYear;
         final TextStyle? itemStyle = isSelected
-            ? themeData.textTheme.headline5
+            ? themeData.textTheme.headlineSmall
                 ?.copyWith(color: themeData.colorScheme.secondary)
             : style;
-        return new InkWell(
-          key: new ValueKey<int>(year),
+        return InkWell(
+          key: ValueKey<int>(year),
           onTap: () {
             // year, widget.selectedDate.hMonth, widget.selectedDate.hMonth
-            widget.onChanged(new HijriCalendar()
+            widget.onChanged(HijriCalendar()
               ..hYear = year
               ..hMonth = widget.selectedDate.hMonth
               ..hDay = widget.selectedDate.hDay);
           },
-          child: new Center(
-            child: new Semantics(
+          child: Center(
+            child: Semantics(
               selected: isSelected,
-              child: new Text(year.toString(), style: itemStyle),
+              child: Text(year.toString(), style: itemStyle),
             ),
           ),
         );
@@ -1000,7 +1000,7 @@ Future<HijriCalendar?> showHijriDatePicker({
   required HijriCalendar firstDate,
   required HijriCalendar lastDate,
   SelectableDayPredicate? selectableDayPredicate,
-  DatePickerMode initialDatePickerMode: DatePickerMode.day,
+  DatePickerMode initialDatePickerMode = DatePickerMode.day,
   Locale? locale,
   TextDirection? textDirection,
 }) async {
@@ -1014,7 +1014,7 @@ Future<HijriCalendar?> showHijriDatePicker({
   assert(selectableDayPredicate == null || selectableDayPredicate(initialDate),
       'Provided initialDate must satisfy provided selectableDayPredicate');
 
-  Widget child = new HijriDatePickerDialog(
+  Widget child = HijriDatePickerDialog(
     initialDate: initialDate,
     firstDate: firstDate,
     lastDate: lastDate,
@@ -1023,14 +1023,14 @@ Future<HijriCalendar?> showHijriDatePicker({
   );
 
   if (textDirection != null) {
-    child = new Directionality(
+    child = Directionality(
       textDirection: textDirection,
       child: child,
     );
   }
 
   if (locale != null) {
-    child = new Localizations.override(
+    child = Localizations.override(
       context: context,
       locale: locale,
       child: child,
