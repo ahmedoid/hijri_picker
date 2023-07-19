@@ -7,8 +7,9 @@ class HijriCalendarBuilders {
     this.dayBuilder,
   });
 
-  /// Weekdays builder (Sat, Sun, ..)
-  final Widget Function(BuildContext context, String day)? weekdayBuilder;
+  /// Weekdays builder (day: Sun, Mon.., number: 0, 1..)
+  final Widget Function(
+      BuildContext context, String day, int number)? weekdayBuilder;
 
   /// Days builder (1, 2, ..)
   final Widget Function(
