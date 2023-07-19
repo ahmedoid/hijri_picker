@@ -740,7 +740,7 @@ class HijriDayPicker extends StatelessWidget {
           ? ExcludeSemantics(
               child: Center(child: Text(weekday, style: headerStyle)),
             )
-          : builders.weekdayBuilder!(context, weekday);
+          : builders.weekdayBuilder!(context, weekday, i);
 
       result.add(weekdayWidget);
 
